@@ -1,0 +1,31 @@
+fn main() {
+    // x over here is just a function item
+    // function item has zero size
+    // they are just used to uniquely identify
+    // a function by the compiler
+    let x = boo;
+    println!("{}", std::mem::size_of_val(&x));
+    // over here, the function item:x is coerced into a function pointer
+    bar(x);
+
+    // a `function pointer` type implements all the three traits: Fn, FnMut and FnOnce
+    // since the `self` in this case is just the function pointer and they have no `state` as such
+    // - they don't have any references nor do they have any lifetimes associated with them, as
+    // opposed to for eg: &str where it is a reference to a string stored somewhere and has lifetime associated with it
+    gim(x, x, x);
+}
+
+fn boo() {}
+
+// this over here is a function pointer
+fn bar(f: fn()) {
+    println!("{}", std::mem::size_of_val(&f))
+}
+
+fn gim<F, X, Y>(f: F, f2: X, f3: Y)
+where
+    F: Fn(),
+    X: FnMut(),
+    Y: FnOnce(),
+{
+}

@@ -1,0 +1,45 @@
+[package]
+name = "rust-os"
+version = "0.1.0"
+edition = "2021"
+
+# we are disbaling unwinding(https://os.phil-opp.com/freestanding-rust-binary/#disabling-unwinding)
+# so that we don't have to worry about the missing `eh_personality` language item which is necessary for the unwinding implementation, which is in the standard library
+[profile.dev]
+panic = "abort"
+
+[profile.release]
+panic = "abort"
+
+# See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
+
+[dependencies]
+# for translating the scan_codes from our keyboard
+pc-keyboard = "0.5.0"
+bootloader = { version = "0.9.23", features = ["map_physical_memory"] }
+volatile = "0.2.6"
+linked_list_allocator = "0.9.0"
+# a replacement for std::sync (since we don't have std libraries available)
+spin = "0.5.2"
+# contains instructions set and helpers for the x86_64 microprocessors
+x86_64 = "0.14.10"
+# for configuring Intel 8259 PIC (Programmable Interface Controller)
+pic8259 = "0.10.1"
+
+[dependencies.lazy_static]
+version = "1.0"
+features = ["spin_no_std"]
+
+[dependencies.crossbeam-queue]
+version = "0.2.1"
+default-features = false
+features = ["alloc"]
+
+[dependencies.conquer-once]
+version = "0.2.0"
+default-features = false
+
+[dependencies.futures-util]
+version = "0.3.4"
+default-features = false
+features = ["alloc"]
